@@ -30,15 +30,15 @@ interface SignupFormData {
     password: string;
 }
 
-type SafeObject = {
+interface SafeObject {
     id: number;
     username: string;
     email: string;
 }
 
 interface UserInstanceMethods {
-    toSafeObject: () => SafeObject
-    validatePassword: (password: string) => boolean 
+    toSafeObject: () => SafeObject;
+    validatePassword: (password: string) => boolean;
 }
 
 export interface DefScopeUser extends UserInstanceMethods {
