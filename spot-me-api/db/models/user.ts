@@ -70,8 +70,25 @@ module.exports = (sequelize: any, DataTypes: any) => {
         balance: {
             type: DataTypes.DECIMAL(10,2),
             allowNull: false
-        },
+        }
     }, {
+        defaultScope: {
+            attributes: {
+                exclude: ['hashedPassword', 'email', 'balance', 'createdAt', 'updatedAt']
+            }
+        },
+        scopes: {
+            currentUser: {
+                attributes: {
+                    exclude: ['hashedPassword'] 
+                }
+            },
+            loginUser: {
+                attributes: {
+                    exclude: []
+                }
+            }
+        },
         sequelize,
         modelName: 'User',
     });

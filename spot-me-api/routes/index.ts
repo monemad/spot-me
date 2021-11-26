@@ -6,6 +6,8 @@ import db from '../db/models';
 
 const router = express.Router();
 
+router.use('/api', apiRouter);
+
 router.get('/', expressAsyncHandler(async (req, res) => {
     //@ts-ignore
     res.cookie('XSRF-TOKEN', req.csrfToken());
@@ -14,6 +16,5 @@ router.get('/', expressAsyncHandler(async (req, res) => {
     res.json(users);
 }));
 
-router.use('/api', apiRouter);
 
 export default router;
