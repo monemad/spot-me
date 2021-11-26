@@ -2,6 +2,7 @@
 
 import { Model, Optional } from 'sequelize';
 import bcrypt from 'bcryptjs';
+import { Settings } from 'http2';
 
 interface UserAttributes {
     id: number;
@@ -27,6 +28,36 @@ interface SignupFormData {
     username: string;
     email: string;
     password: string;
+}
+
+type SafeObject = {
+    id: number;
+    username: string;
+    email: string;
+}
+
+interface UserInstanceMethods {
+    toSafeObject: () => SafeObject
+    validatePassword: (password: string) => boolean 
+}
+
+export interface DefScopeUser extends UserInstanceMethods {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username: string;
+    imgUrl: string;
+}
+
+export interface CurScopeUser extends DefScopeUser {
+    email: string;
+    balance: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface LoginUser extends CurScopeUser {
+    hashedPassword: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
