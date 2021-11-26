@@ -46,7 +46,7 @@ app.use(routes);
 
 // Error handling
 
-class RequestError extends Error {
+export class RequestError extends Error {
     title: string;
     errors: Array<string>;
     status: number;

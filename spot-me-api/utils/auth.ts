@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../db/models';
-import { DefScopeUser} from '../db/models/user'
+import db from '../db/models';
+import { DefScopeUser } from '../db/models/user';
+import { RequestError } from '../app';
+
+const User: any = db.User;
 
 interface JWTConfig {
     secret: string;
@@ -10,7 +13,7 @@ interface JWTConfig {
 const { jwtConfig } = require('../config');
 const { secret, expiresIn }: JWTConfig = jwtConfig;
 
-const setTokenCookie = (res: any, user: DefScopeUser) => {
+export const setTokenCookie = (res: any, user: DefScopeUser) => {
     const token: string = jwt.sign(
         { data: user.toSafeObject() },
         secret,
@@ -33,8 +36,8 @@ interface Cookies {
     token: string
 }
 
-const restoreUser= (req: any, res: any, next: any) => {
-    const { token }: Cookies  = req.cookies;
+export const restoreUser= (req: any, res: any, next: any) => {
+    const { token }: Cookies = req.cookies;
 
     return jwt.verify(token, secret, async (err, jwtPayload: any) => {
         if (err)
@@ -53,3 +56,16 @@ const restoreUser= (req: any, res: any, next: any) => {
         return next();
     })
 }
+
+export const requireAuth = [
+    restoreUser,
+    function (req: any, res: any, next: any) {
+        if (req.user) return next();
+
+        const err = new RequestError('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = ['Unauthorized'];
+        err.status = 401;
+        return next(err);
+    }
+]
