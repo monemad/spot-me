@@ -35,6 +35,7 @@ app.use(
     csurf({
         cookie: {
         secure: isProduction,
+        //@ts-ignore
         sameSite: isProduction && "Lax",
         httpOnly: true,
         },
@@ -52,6 +53,9 @@ class RequestError extends Error {
 
     constructor(error: string) {
         super(error);
+        this.title = '';
+        this.errors = [];
+        this.status = 0;
     }
 }
 
@@ -64,7 +68,7 @@ app.use((_req, _res, next) => {
 });
 
 // Process sequelize errors
-app.use((err, _req, _res, next) => {
+app.use((err: RequestError | ValidationError, _req: any, _res: any, next: any) => {
     // check if error is a Sequelize error:
     if (err instanceof ValidationError) {
         const newError = new RequestError("Sequelize Validation Error")
@@ -75,7 +79,7 @@ app.use((err, _req, _res, next) => {
     next(err)
 });
 
-app.use((err, _req, res, _next) => {
+app.use((err: RequestError, _req: any, res: any, _next: any) => {
     res.status(err.status || 500);
     console.error(err);
     res.json({
