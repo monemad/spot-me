@@ -1,6 +1,7 @@
 'use strict';
 
 import { Model, Optional } from 'sequelize';
+import bcrypt from 'bcryptjs';
 
 interface UserAttributes {
     id: number;
@@ -15,6 +16,11 @@ interface UserAttributes {
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
+interface LoginCredentials {
+    credential: string;
+    password: string;
+}
+
 module.exports = (sequelize: any, DataTypes: any) => {
     class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
         id!: number;
@@ -25,14 +31,41 @@ module.exports = (sequelize: any, DataTypes: any) => {
         hashedPassword!: string;
         imgUrl!: string;
         balance!: number;
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
+
         static associate(models: any) {
-        // define association here
+
         }
+
+        toSafeObject = () => {
+            const { id, username, email } = this;
+            return { id, username, email };
+        }
+
+        validatePassword = (password: string) => {
+            return bcrypt.compareSync(password, this.hashedPassword)
+        }
+
+        static async getCurrentUserById(id: number) {
+            return await User.scope('currentUser').findByPk(id);
+        }
+
+
+        static async login(data: LoginCredentials) {
+            const { credential, password } = data
+            const { Op } = require('sequelize');
+            const user = await User.scope('loginUser').findOne({
+                where: {
+                    [Op.or]: {
+                        username: credential,
+                        email: credential
+                    }
+                }
+            })
+            if (user && user.validatePassword(password)) {
+                return await User.scope('currentUser').findByPk(user.id)
+            }
+        }
+
     };
     User.init({
         id: {
@@ -43,21 +76,34 @@ module.exports = (sequelize: any, DataTypes: any) => {
         },
         firstName: {
             type: DataTypes.STRING(50),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [2, 50]
+            }
         },
         lastName: {
             type: DataTypes.STRING(50),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [2, 50]
+            }
         },
         username: {
             type: DataTypes.STRING(25),
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                len: [2,25]
+            }
         },
         email: {
             type: DataTypes.STRING(100),
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                len: [5, 100],
+                isEmail: true
+            }
         },
         hashedPassword: {
             type: DataTypes.STRING,
@@ -69,7 +115,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         },
         balance: {
             type: DataTypes.DECIMAL(10,2),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                min: 0
+            }
         }
     }, {
         defaultScope: {
