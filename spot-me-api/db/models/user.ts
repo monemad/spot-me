@@ -21,6 +21,14 @@ interface LoginCredentials {
     password: string;
 }
 
+interface SignupFormData {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
+}
+
 module.exports = (sequelize: any, DataTypes: any) => {
     class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
         id!: number;
@@ -50,8 +58,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         }
 
 
-        static async login(data: LoginCredentials) {
-            const { credential, password } = data
+        static async login({ credential, password }: LoginCredentials) {
             const { Op } = require('sequelize');
             const user = await User.scope('loginUser').findOne({
                 where: {
@@ -64,6 +71,20 @@ module.exports = (sequelize: any, DataTypes: any) => {
             if (user && user.validatePassword(password)) {
                 return await User.scope('currentUser').findByPk(user.id)
             }
+        }
+
+        static async signup({ firstName, lastName, username, email, password } : SignupFormData) {
+            const hashedPassword = bcrypt.hashSync(password)
+            const user = await User.create({
+                firstName,
+                lastName,
+                username, 
+                email,
+                hashedPassword, 
+                imgUrl: 'default.png',
+                balance: 0
+            })
+            return await User.scope('currentUser').findByPk(user.id);
         }
 
     };
