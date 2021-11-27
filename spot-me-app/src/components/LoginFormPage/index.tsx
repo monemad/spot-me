@@ -8,9 +8,9 @@ function LoginFormPage() {
     const dispatch: any = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector((state: State) => state.session.user);
-    const [credential, setCredential] = useState('');
-    const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState([]);
+    const [credential, setCredential] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [errors, setErrors] = useState<Array<string>>([]);
 
     if (sessionUser) navigate('/');
 
