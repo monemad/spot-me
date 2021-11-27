@@ -12,9 +12,6 @@ router.get('/', expressAsyncHandler(async (req, res) => {
     //@ts-ignore
     res.cookie('XSRF-TOKEN', req.csrfToken());
     const users = await db.User.findAll();
-    const user = await db.User.build({firstName: 'Wiz', lastName: 'Kika', username: 'wizkika', email: 'therealwizkika@gmail.com', hashedPassword: 'testhashpassword', imgUrl: 'testImgUrl', balance: 999.99})
-    await user.save();
-    console.log(user);
     res.json(users);
 }));
 
