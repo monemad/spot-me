@@ -8,7 +8,7 @@ const router = express.Router();
 const User = db.User;
 
 router.post('/', validateSignup, asyncHandler(async (req: any, res: any) => {
-    const { firstName, lastName, username, email, password} = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
     const user = await User.signup({ firstName, lastName, username, email, password });
 
     await setTokenCookie(res, user);
