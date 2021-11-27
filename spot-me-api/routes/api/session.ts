@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import { RequestError } from '../../app';
-import { setTokenCookie, restoreUser } from '../../utils/auth';
+import { setTokenCookie } from '../../utils/auth';
 import db from '../../db/models'
 
 const router = express.Router();
