@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import { RequestError } from '../../app';
-import { setTokenCookie } from '../../utils/auth';
+import { restoreUser, setTokenCookie } from '../../utils/auth';
 import db from '../../db/models'
 
 const router = express.Router();
@@ -28,6 +28,13 @@ router.post('/', asyncHandler(async (req: any, res: any, next: any) => {
 router.delete('/', (_req: any, res: any) => {
     res.clearCookie('token');
     return res.json({ message: 'success' });
+})
+
+router.get('/', restoreUser, (req: any, res: any) => {
+    const { user } = req;
+    if (user)
+        return res.json({ user: user.toSafeObject()});
+    return res.json({})
 })
 
 export default router;
