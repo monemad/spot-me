@@ -3,11 +3,12 @@ import asyncHandler from 'express-async-handler';
 import { RequestError } from '../../app';
 import { restoreUser, setTokenCookie } from '../../utils/auth';
 import db from '../../db/models'
+import { validateLogin } from '../../utils/validation';
 
 const router = express.Router();
 const User = db.User;
 
-router.post('/', asyncHandler(async (req: any, res: any, next: any) => {
+router.post('/', validateLogin, asyncHandler(async (req: any, res: any, next: any) => {
     const { credential, password } = req.body;
 
     const user = await User.login({ credential, password });
