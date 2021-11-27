@@ -1,5 +1,5 @@
 import { csrfFetch } from './csrf';
-import { CurScopeUser, LoginCredentials } from 'interfaces/user';
+import { CurScopeUser, LoginCredentials, SignupFormData } from 'interfaces/user';
 import { Action } from 'interfaces/redux';
 
 const SET_USER = 'session/setUser';
@@ -25,6 +25,31 @@ export const login = (user: LoginCredentials) => async (dispatch: any) => {
         body: JSON.stringify({
         credential,
         password,
+        }),
+    });
+    const data = await response.json();
+    dispatch(setUser(data.user));
+    return response;
+};
+
+export const restoreUser = () => async (dispatch: any) => {
+    const response = await csrfFetch('/api/session');
+    const data = await response.json();
+    dispatch(setUser(data.user));
+    return response;
+};
+
+export const signup = (user: SignupFormData) => async (dispatch: any) => {
+    const { firstName, lastName, username, email, password } = user;
+    console.log(user);
+    const response = await csrfFetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify({
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
         }),
     });
     const data = await response.json();
