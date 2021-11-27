@@ -3,7 +3,6 @@ import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { State } from 'interfaces/redux';
-import { JsxElement } from 'typescript';
 
 function LoginFormPage() {
     const dispatch: any = useDispatch();
