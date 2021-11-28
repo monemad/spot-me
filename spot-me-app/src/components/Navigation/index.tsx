@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { State } from 'interfaces/redux';
 import { logout } from 'store/session';
+import AuthFormsModal from '../modals/AuthFormModals';
 
 function Navigation(){
     const dispatch: any = useDispatch();
@@ -25,8 +26,8 @@ function Navigation(){
                     </>
                     :
                     <>
-                        <NavLink to="/login">Login</NavLink>
-                        <NavLink to="/signup">Signup</NavLink>
+                        <AuthFormsModal showLogin={true}/>
+                        <AuthFormsModal showLogin={false}/>
                     </>
                 }
             </div>

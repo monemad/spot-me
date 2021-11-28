@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import { State } from "interfaces/redux";
+import { ModalChildProps } from "interfaces/modal";
 
-function SignupFormPage() {
+function SignupForm({ setShowModal }: ModalChildProps) {
     const dispatch: any = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector((state: State) => state.session.user);
@@ -23,6 +24,7 @@ function SignupFormPage() {
         if (password === confirmPassword) {
         setErrors([]);
         return dispatch(sessionActions.signup({ firstName, lastName, email, username, password }))
+            .then(()=>setShowModal(false))
             .catch(async (res: any) => {
             const data = await res.json();
             if (data && data.errors) setErrors(data.errors);
@@ -95,4 +97,4 @@ function SignupFormPage() {
     );
 }
 
-export default SignupFormPage;
+export default SignupForm;
