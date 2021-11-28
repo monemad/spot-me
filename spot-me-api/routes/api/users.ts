@@ -16,4 +16,12 @@ router.post('/', validateSignup, asyncHandler(async (req: any, res: any) => {
     return res.json({ user });
 }));
 
+router.get('/', asyncHandler(async (req: any, res: any) => {
+    const users = await User.findAll({
+        include: db.Friend
+    })
+    console.log(users[0].Friends)
+    return res.json( users );
+}));
+
 export default router;

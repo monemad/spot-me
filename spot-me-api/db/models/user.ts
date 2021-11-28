@@ -2,7 +2,6 @@
 
 import { Model, Optional } from 'sequelize';
 import bcrypt from 'bcryptjs';
-import { Settings } from 'http2';
 
 interface UserAttributes {
     id: number;
@@ -72,7 +71,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         balance!: number;
 
         static associate(models: any) {
-
+            User.hasMany(models.Friend, {foreignKey: 'senderId'});
+            User.hasMany(models.Friend, {foreignKey: 'recipientId'});
         }
 
         toSafeObject = () => {
@@ -87,7 +87,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
         static async getCurrentUserById(id: number) {
             return await User.scope('currentUser').findByPk(id);
         }
-
 
         static async login({ credential, password }: LoginCredentials) {
             const { Op } = require('sequelize');
