@@ -73,6 +73,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         static associate(models: any) {
             User.hasMany(models.Friend, {foreignKey: 'senderId'});
             User.hasMany(models.Friend, {foreignKey: 'recipientId'});
+            User.hasMany(models.Payment, {foreignKey: 'senderId'});
+            User.hasMany(models.Payment, {foreignKey: 'recipientId'});
         }
 
         toSafeObject = () => {
@@ -108,9 +110,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
             const user = await User.create({
                 firstName,
                 lastName,
-                username, 
+                username,
                 email,
-                hashedPassword, 
+                hashedPassword,
                 imgUrl: 'default.png',
                 balance: 0
             })

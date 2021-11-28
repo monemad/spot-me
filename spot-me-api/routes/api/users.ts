@@ -20,7 +20,7 @@ router.get('/', asyncHandler(async (req: any, res: any) => {
     const users = await User.findAll({
         include: db.Friend
     })
-    console.log(users[0].Friends)
+    console.log(users[0].Payments)
     return res.json( users );
 }));
 
