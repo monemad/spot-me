@@ -9,7 +9,7 @@ interface UserInstanceMethods {
     validatePassword: (password: string) => boolean;
 }
 
-export interface DefScopeUser extends UserInstanceMethods {
+export interface User extends UserInstanceMethods {
     id: number;
     firstName: string;
     lastName: string;
@@ -17,7 +17,7 @@ export interface DefScopeUser extends UserInstanceMethods {
     imgUrl: string;
 }
 
-export interface CurScopeUser extends DefScopeUser {
+export interface SessionUser extends User {
     email: string;
     balance: number;
     createdAt: string;

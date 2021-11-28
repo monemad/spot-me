@@ -1,4 +1,4 @@
-import { CurScopeUser } from "./user";
+import { SessionUser } from "./user";
 
 export interface Action {
     type: string;
@@ -6,7 +6,7 @@ export interface Action {
 }
 
 interface SessionState {
-    user: CurScopeUser
+    user: SessionUser
 }
 
 export interface State {

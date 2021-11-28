@@ -1,22 +1,22 @@
 import { csrfFetch } from './csrf';
-import { CurScopeUser, LoginCredentials, SignupFormData } from 'interfaces/user';
+import { SessionUser, LoginCredentials, SignupFormData } from 'interfaces/user';
 import { Action } from 'interfaces/redux';
 
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
 
-const setUser = (user: CurScopeUser) => {
+const setUser = (user: SessionUser) => {
     return {
         type: SET_USER,
         payload: user,
     };
 };
 
-// const removeUser = () => {
-//     return {
-//         type: REMOVE_USER,
-//     };
-// };
+const removeUser = () => {
+    return {
+        type: REMOVE_USER,
+    };
+};
 
 export const login = (user: LoginCredentials) => async (dispatch: any) => {
     const { credential, password } = user;
@@ -54,6 +54,14 @@ export const signup = (user: SignupFormData) => async (dispatch: any) => {
     });
     const data = await response.json();
     dispatch(setUser(data.user));
+    return response;
+};
+
+export const logout = () => async (dispatch: any) => {
+    const response = await csrfFetch('/api/session', {
+        method: 'DELETE',
+    });
+    dispatch(removeUser());
     return response;
 };
 
