@@ -14,7 +14,6 @@ interface PaymentAttributes {
 interface PaymentCreationAttributes extends Optional<PaymentAttributes, "id"> {}
 
 module.exports = (sequelize: any, DataTypes: any) => {
-
     class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implements PaymentAttributes {
         id!: number;
         senderId!: number;
