@@ -1,11 +1,13 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
+import { Op } from 'sequelize';
 import { setTokenCookie } from '../../utils/auth';
 import db from '../../db/models';
 import { validateSignup } from '../../utils/validation';
+import { sensitiveHeaders } from 'http2';
 
 const router = express.Router();
-const User = db.User;
+const { User, Friend } = db;
 
 router.post('/', validateSignup, asyncHandler(async (req: any, res: any) => {
     const { firstName, lastName, username, email, password } = req.body;
@@ -27,6 +29,41 @@ router.get('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
     const user = await User.findByPk(id);
     return res.json(user);
+}));
+
+router.get('/:id/friends/', asyncHandler(async (req: any, res: any) => {
+    const id: number = +req.params.id;
+    const friends = await Friend.findAll({
+        where: {
+            [Op.or]: [
+                {recipientId: id},
+                {senderId: id}
+            ]
+        },
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
+    });
+    friends.forEach((friend: any) => {
+        const isSender: boolean = id === friend.dataValues.senderId;
+        const friendData = isSender ? friend.dataValues.recipient : friend.dataValues.sender;
+
+        friend.dataValues.firstName = friendData.firstName;
+        friend.dataValues.lastName = friendData.lastName;
+        friend.dataValues.username = friendData.username;
+        friend.dataValues.imgUrl = friendData.imgUrl;
+        delete friend.dataValues.sender;
+        delete friend.dataValues.recipient;
+    })
+    
+    return res.json(friends);
 }));
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
