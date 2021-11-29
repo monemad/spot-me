@@ -2,7 +2,6 @@
 
 import { Model, Optional } from 'sequelize';
 import bcrypt from 'bcryptjs';
-import { Settings } from 'http2';
 
 interface UserAttributes {
     id: number;
@@ -72,7 +71,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
         balance!: number;
 
         static associate(models: any) {
-
+            User.hasMany(models.Friend, { foreignKey: 'senderId' });
+            User.hasMany(models.Friend, { foreignKey: 'recipientId' });
+            User.hasMany(models.Payment, { foreignKey: 'senderId' });
+            User.hasMany(models.Payment, { foreignKey: 'recipientId' });
+            User.hasMany(models.Transfer, { foreignKey: 'userId' });
         }
 
         toSafeObject = () => {
@@ -81,13 +84,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
         }
 
         validatePassword = (password: string) => {
-            return bcrypt.compareSync(password, this.hashedPassword)
+            return bcrypt.compareSync(password, this.hashedPassword);
         }
 
         static async getCurrentUserById(id: number) {
             return await User.scope('currentUser').findByPk(id);
         }
-
 
         static async login({ credential, password }: LoginCredentials) {
             const { Op } = require('sequelize');
@@ -100,21 +102,21 @@ module.exports = (sequelize: any, DataTypes: any) => {
                 }
             })
             if (user && user.validatePassword(password)) {
-                return await User.scope('currentUser').findByPk(user.id)
+                return await User.scope('currentUser').findByPk(user.id);
             }
         }
 
         static async signup({ firstName, lastName, username, email, password } : SignupFormData) {
-            const hashedPassword = bcrypt.hashSync(password)
+            const hashedPassword = bcrypt.hashSync(password);
             const user = await User.create({
                 firstName,
                 lastName,
-                username, 
+                username,
                 email,
-                hashedPassword, 
+                hashedPassword,
                 imgUrl: 'default.png',
                 balance: 0
-            })
+            });
             return await User.scope('currentUser').findByPk(user.id);
         }
 
