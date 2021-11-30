@@ -19,8 +19,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         confirmed!: boolean;
         
         static associate(models: any) {
-            Friend.belongsTo(models.User, {foreignKey: 'senderId'});
-            Friend.belongsTo(models.User, {foreignKey: 'recipientId'});
+            Friend.belongsTo(models.User, {foreignKey: 'senderId', as: 'sender'});
+            Friend.belongsTo(models.User, {foreignKey: 'recipientId', as: 'recipient'});
         }
     };
     Friend.init({
