@@ -25,8 +25,17 @@ router.get('/', asyncHandler(async (req: any, res: any) => {
 }));
 
 router.get('/search/:query', asyncHandler(async (req: any, res:any) => {
-    console.log(req.params.query);
-    return res.json({message:'true'});
+    const query: string = req.params.query;
+    const users = await User.findAll({
+        where: {
+            [Op.or]: [
+                {firstName: {[Op.iRegexp]:`.*${query}.*`}},
+                {lastName: {[Op.iRegexp]:`.*${query}.*`}},
+                {username: {[Op.iRegexp]:`.*${query}.*`}}
+            ]
+        }
+    });
+    return res.json(users);
 }))
 
 router.get('/:id/', asyncHandler(async (req: any, res: any) => {
