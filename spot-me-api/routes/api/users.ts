@@ -4,10 +4,9 @@ import { Op } from 'sequelize';
 import { setTokenCookie } from '../../utils/auth';
 import db from '../../db/models';
 import { validateSignup } from '../../utils/validation';
-import { sensitiveHeaders } from 'http2';
 
 const router = express.Router();
-const { User, Friend } = db;
+const { User, Friend, Payment, Transfer } = db;
 
 router.post('/', validateSignup, asyncHandler(async (req: any, res: any) => {
     const { firstName, lastName, username, email, password } = req.body;
@@ -24,6 +23,11 @@ router.get('/', asyncHandler(async (req: any, res: any) => {
     })
     return res.json( users );
 }));
+
+router.get('/search/:query', asyncHandler(async (req: any, res:any) => {
+    console.log(req.params.query);
+    return res.json({message:'true'});
+}))
 
 router.get('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
@@ -51,6 +55,7 @@ router.get('/:id/friends/', asyncHandler(async (req: any, res: any) => {
             }
         ]
     });
+
     friends.forEach((friend: any) => {
         const isSender: boolean = id === friend.dataValues.senderId;
         const friendData = isSender ? friend.dataValues.recipient : friend.dataValues.sender;
@@ -65,6 +70,33 @@ router.get('/:id/friends/', asyncHandler(async (req: any, res: any) => {
     
     return res.json(friends);
 }));
+
+router.get('/:id/payments/', asyncHandler(async (req: any, res: any) => {
+    const id: number = +req.params.id;
+    const payments = await Payment.findAll({
+        where: {
+            [Op.or]: [
+                {recipientId: id},
+                {senderId: id}
+            ]
+        }
+    });
+
+    console.log(payments);
+    return res.json(payments);
+}))
+
+router.get('/:id/transfers/', asyncHandler(async (req: any, res: any) => {
+    const id: number = +req.params.id;
+    const transfers = await Transfer.findAll({
+        where: {
+            userId: id
+        }
+    })
+
+    console.log(transfers);
+    return res.json(transfers);
+}))
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
