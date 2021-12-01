@@ -28,6 +28,10 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<></>}/>
+                <Route path="/friends" element={<>Friends</>}/>
+                <Route path="/friends" element={<>Friends</>}/>
+                <Route path="/history" element={<>History</>}/>
+                <Route element={<>404</>}/>
             </Routes>
         </>
         :
