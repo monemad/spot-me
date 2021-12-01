@@ -1,6 +1,8 @@
 import { csrfFetch } from './csrf';
 import { SessionUser, LoginCredentials, SignupFormData } from 'interfaces/user';
 import { Action } from 'interfaces/redux';
+import rfdc from 'rfdc';
+const clone = rfdc({ proto: false, circles: false })
 
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
@@ -36,7 +38,7 @@ export const restoreUser = () => async (dispatch: any) => {
     const response = await csrfFetch('/api/session');
     const data = await response.json();
     dispatch(setUser(data.user));
-    return response;
+    return data.user;
 };
 
 export const signup = (user: SignupFormData) => async (dispatch: any) => {
@@ -68,18 +70,16 @@ export const logout = () => async (dispatch: any) => {
 const initialState = { user: null };
 
 const sessionReducer = (state = initialState, action: Action) => {
-    let newState;
+    let newState = clone(state);
     switch (action.type) {
         case SET_USER:
-        newState = Object.assign({}, state);
-        newState.user = action.payload;
-        return newState;
+            newState.user = action.payload;
+            return newState;
         case REMOVE_USER:
-        newState = Object.assign({}, state);
-        newState.user = null;
-        return newState;
+            newState.user = null;
+            return newState;
         default:
-        return state;
+            return state;
     }
 };
 

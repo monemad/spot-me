@@ -2,7 +2,11 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { SessionUser } from 'interfaces/user';
 import * as sessionActions from "./store/session";
+import { getFriends } from 'store/friends';
+import { getPayments } from 'store/payments';
+import { getTransfers } from 'store/transfers';
 import Navigation from 'components/Navigation';
 
 function App() {
@@ -10,7 +14,13 @@ function App() {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
+        dispatch(sessionActions.restoreUser())
+            .then((user: SessionUser) => {
+                dispatch(getFriends(user.id));
+                dispatch(getPayments(user.id));
+                dispatch(getTransfers(user.id));
+            })
+            .then(() => setIsLoaded(true));
     }, [dispatch]);
 
     return ( isLoaded ?
@@ -18,8 +28,6 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<></>}/>
-                {/* <Route path="/login" element={<LoginFormPage />}/>
-                <Route path="/signup" element={<SignupFormPage />}/> */}
             </Routes>
         </>
         :

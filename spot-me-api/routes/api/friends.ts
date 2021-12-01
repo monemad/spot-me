@@ -9,7 +9,7 @@ const { Friend, User } = db;
 
 router.post('/', validateFriend, asyncHandler(async (req: any, res: any) => {
     const { senderId, recipientId, confirmed } = req.body;
-    const friend = await Friend.findOne({
+    const isFriend = await Friend.findOne({
         where: {
             [Op.or]: [
                 {
@@ -24,30 +24,68 @@ router.post('/', validateFriend, asyncHandler(async (req: any, res: any) => {
         }
     })
 
-    if (friend) return res.json({message: 'Friend already exists'})
+    if (isFriend) return res.json({message: 'Friend already exists'})
 
 
-    await Friend.create({
+    let friend = await Friend.create({
         senderId,
         recipientId,
         confirmed
     });
 
-    const sender = await User.findByPk(senderId);
-    const recipient = await User.findByPk(recipientId);
-    res.json({sender, recipient});
+    friend = await Friend.findByPk(friend.id, {
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
+    })
+
+    const friendData = friend.dataValues.recipient;
+
+    friend.dataValues.firstName = friendData.firstName;
+    friend.dataValues.lastName = friendData.lastName;
+    friend.dataValues.username = friendData.username;
+    friend.dataValues.imgUrl = friendData.imgUrl;
+    delete friend.dataValues.sender;
+    delete friend.dataValues.recipient;
+
+    res.json(friend);
 }));
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
-    const friend = await Friend.findByPk(id);
+    const friend = await Friend.findByPk(id, {
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
+    });
 
     friend.confirmed = true;
     await friend.save()
 
-    const sender = await User.findByPk(friend.senderId);
-    const recipient = await User.findByPk(friend.recipientId);
-    res.json({sender, recipient});
+    const friendData = friend.dataValues.sender;
+
+    friend.dataValues.firstName = friendData.firstName;
+    friend.dataValues.lastName = friendData.lastName;
+    friend.dataValues.username = friendData.username;
+    friend.dataValues.imgUrl = friendData.imgUrl;
+    delete friend.dataValues.sender;
+    delete friend.dataValues.recipient;
+    
+    res.json(friend);
 }));
 
 router.delete('/:id/', asyncHandler(async (req: any, res: any) => {
@@ -59,9 +97,9 @@ router.delete('/:id/', asyncHandler(async (req: any, res: any) => {
     const { senderId, recipientId } = friend;
     await friend.destroy();
 
-    const sender = await User.findByPk(senderId);
-    const recipient = await User.findByPk(recipientId);
-    res.json({sender,recipient});
+    // const sender = await User.findByPk(senderId);
+    // const recipient = await User.findByPk(recipientId);
+    res.json({message: "Successfully deleted"});
 }));
 
 export default router;
