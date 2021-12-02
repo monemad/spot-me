@@ -31,7 +31,7 @@ router.delete('/', (_req: any, res: any) => {
     return res.json({ message: 'success' });
 })
 
-router.get('/', restoreUser, (req: any, res: any) => {
+router.get('/', restoreUser, async (req: any, res: any) => {
     const { user } = req;
     if (user)
         return res.json({ user: user.toSafeObject()});

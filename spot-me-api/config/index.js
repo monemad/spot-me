@@ -11,4 +11,8 @@ module.exports = {
         secret: process.env.JWT_SECRET,
         expiresIn: process.env.JWT_EXPIRES_IN
     },
+    stripeKey: {
+        secret: process.env.STRIPE_SECRET_KEY,
+        public: process.env.STRIPE_PUBLIC_KEY
+    }
 };
