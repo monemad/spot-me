@@ -91,7 +91,6 @@ router.get('/:id/payments/', asyncHandler(async (req: any, res: any) => {
         }
     });
 
-    console.log(payments);
     return res.json(payments);
 }))
 
@@ -103,7 +102,6 @@ router.get('/:id/transfers/', asyncHandler(async (req: any, res: any) => {
         }
     })
 
-    console.log(transfers);
     return res.json(transfers);
 }))
 

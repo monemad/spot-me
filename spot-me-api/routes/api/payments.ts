@@ -9,7 +9,7 @@ const { Payment, User } = db;
 router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
     const { senderId, recipientId, amount, memo, fulfilled } = req.body;
 
-    await Payment.create({
+    const payment = await Payment.create({
         senderId,
         recipientId,
         amount,
@@ -17,9 +17,16 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
         fulfilled
     });
 
-    const sender = await User.findByPk(senderId);
-    const recipient = await User.findByPk(recipientId);
-    res.json([sender, recipient]);
+    if (fulfilled) {
+        const sender = await User.scope('currentUser').findByPk(senderId);
+        const recipient = await User.scope('currentUser').findByPk(recipientId);
+        sender.balance= +sender.balance - +amount;
+        recipient.balance= +recipient.balance + +amount;
+        await sender.save();
+        await recipient.save();
+    }
+
+    res.json(payment);
 }));
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
@@ -29,9 +36,14 @@ router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     payment.fulfilled = true;
     await payment.save();
 
-    const sender = await User.findByPk(payment.senderId);
-    const recipient = await User.findByPk(payment.recipientId);
-    res.json([sender, recipient]);
+    const sender = await User.scope('currentUser').findByPk(payment.senderId);
+    const recipient = await User.scope('currentUser').findByPk(payment.recipientId);
+    sender.balance= +sender.balance - +payment.amount;
+    recipient.balance= +recipient.balance + +payment.amount;
+    await sender.save();
+    await recipient.save();
+        
+    res.json(payment);
 }));
 
 export default router;

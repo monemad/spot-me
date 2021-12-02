@@ -7,6 +7,7 @@ interface TransferAttributes {
     userId: number;
     amount: number;
     deposit: boolean;
+    stripeConf: string;
 }
 
 interface TransferCreationAttributes extends Optional<TransferAttributes, "id"> {}
@@ -17,6 +18,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         userId!: number;
         amount!: number;
         deposit!: boolean;
+        stripeConf!: string;
 
         static associate(models: any) {
             Transfer.belongsTo(models.User, { foreignKey: 'userId' });
@@ -39,6 +41,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         },
         deposit: {
             type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        stripeConf: {
+            type: DataTypes.STRING,
             allowNull: false
         }
     }, {
