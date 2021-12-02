@@ -93,12 +93,8 @@ router.delete('/:id/', asyncHandler(async (req: any, res: any) => {
     const friend = await Friend.findByPk(id);
     
     if (!friend) return res.json({message: 'Friend does not exist'})
-    
-    const { senderId, recipientId } = friend;
     await friend.destroy();
-
-    // const sender = await User.findByPk(senderId);
-    // const recipient = await User.findByPk(recipientId);
+    
     res.json({message: "Successfully deleted"});
 }));
 

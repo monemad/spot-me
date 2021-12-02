@@ -107,13 +107,12 @@ router.get('/:id/transfers/', asyncHandler(async (req: any, res: any) => {
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
-    const { firstName, lastName, username, email, balance } = req.body;
+    const { firstName, lastName, username, email } = req.body;
     const user = await User.findByPk(id);
     user.firstName = firstName;
     user.lastName = lastName;
     user.username = username;
     user.email = email;
-    user.balance = balance;
     await user.save();
     return res.json(user);
 }))
