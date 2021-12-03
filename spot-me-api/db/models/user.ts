@@ -12,6 +12,8 @@ interface UserAttributes {
     hashedPassword: string;
     imgUrl: string;
     balance: number;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -69,6 +71,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         hashedPassword!: string;
         imgUrl!: string;
         balance!: number;
+        createdAt?: string;
+        updatedAt?: string;
 
         static associate(models: any) {
             User.hasMany(models.Friend, { foreignKey: 'senderId' });
@@ -79,8 +83,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         }
 
         toSafeObject = () => {
-            const { id, username, email } = this;
-            return { id, username, email };
+            const { id, firstName, lastName, username, email, imgUrl, balance, createdAt, updatedAt } = this;
+            return { id, firstName, lastName, username, email, imgUrl, balance, createdAt, updatedAt };
         }
 
         validatePassword = (password: string) => {
@@ -114,7 +118,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
                 username,
                 email,
                 hashedPassword,
-                imgUrl: 'default.png',
+                imgUrl: 'default-profile-pic.png',
                 balance: 0
             });
             return await User.scope('currentUser').findByPk(user.id);

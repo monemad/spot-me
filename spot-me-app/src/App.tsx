@@ -8,6 +8,7 @@ import { getFriends } from 'store/friends';
 import { getPayments } from 'store/payments';
 import { getTransfers } from 'store/transfers';
 import Navigation from 'components/Navigation';
+import Home from 'components/Home';
 
 function App() {
     const dispatch: any = useDispatch();
@@ -27,7 +28,7 @@ function App() {
         <>
             <Navigation />
             <Routes>
-                <Route path="/" element={<></>}/>
+                <Route path="/" element={<Home />}/>
                 <Route path="/friends" element={<>Friends</>}/>
                 <Route path="/friends" element={<>Friends</>}/>
                 <Route path="/history" element={<>History</>}/>
