@@ -14,7 +14,7 @@ function TransferForm({ setShowModal, props }: ModalChildProps) {
     const [deposit, setDeposit] = useState<boolean>(true);
     const [amount, setAmount] = useState<number>(deposit ? 100 : sessionUser.balance);
     const [loading, setLoading] = useState<boolean>(false);
-    const { setOpenSnackbar } = props;
+    const { setOpenSnackbar, setSnackbarMessage } = props;
 
     const updateDeposit = (e: any) => {
         setDeposit(e.target.value === "true");
@@ -37,6 +37,7 @@ function TransferForm({ setShowModal, props }: ModalChildProps) {
         await dispatch(restoreUser());
         setLoading(false);
         setShowModal(false);
+        setSnackbarMessage('Transfer successful!')
         setOpenSnackbar(true);
     }
 

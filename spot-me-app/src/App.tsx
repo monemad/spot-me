@@ -11,6 +11,7 @@ import Navigation from 'components/Navigation';
 import Home from 'components/Home';
 import Friends from 'components/Friends';
 import History from 'components/History';
+import PendingSpots from 'components/PendingSpots';
 
 function App() {
     const dispatch: any = useDispatch();
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/" element={<Home />}/>
                 <Route path="/friends" element={<Friends />}/>
                 <Route path="/history" element={<History />}/>
+                <Route path="/pending-spots" element={<PendingSpots />}/>
                 <Route path="*" element={<>404</>}/>
             </Routes>
         </>

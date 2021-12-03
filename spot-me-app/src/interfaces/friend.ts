@@ -7,6 +7,7 @@ export interface Friend {
     lastName: string;
     username: string;
     imgUrl: string;
+    otherId: number;
     createdAt: string;
     updatedAt: string;
 }

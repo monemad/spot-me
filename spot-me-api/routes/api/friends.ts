@@ -52,6 +52,7 @@ router.post('/', validateFriend, asyncHandler(async (req: any, res: any) => {
     friend.dataValues.lastName = friendData.lastName;
     friend.dataValues.username = friendData.username;
     friend.dataValues.imgUrl = friendData.imgUrl;
+    friend.dataValues.otherId = friendData.id;
     delete friend.dataValues.sender;
     delete friend.dataValues.recipient;
 
@@ -82,6 +83,7 @@ router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     friend.dataValues.lastName = friendData.lastName;
     friend.dataValues.username = friendData.username;
     friend.dataValues.imgUrl = friendData.imgUrl;
+    friend.dataValues.otherId = friendData.id;
     delete friend.dataValues.sender;
     delete friend.dataValues.recipient;
     

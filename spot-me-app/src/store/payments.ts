@@ -42,13 +42,13 @@ export const createPayment = ({senderId, recipientId, amount, memo, fulfilled}: 
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
+        body: JSON.stringify({
             senderId,
             recipientId,
             amount,
             memo,
             fulfilled
-        }
+        })
     });
 
     if(response.ok) {

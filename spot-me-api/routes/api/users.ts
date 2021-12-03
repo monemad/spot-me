@@ -73,6 +73,7 @@ router.get('/:id/friends/', asyncHandler(async (req: any, res: any) => {
         friend.dataValues.lastName = friendData.lastName;
         friend.dataValues.username = friendData.username;
         friend.dataValues.imgUrl = friendData.imgUrl;
+        friend.dataValues.otherId = friendData.id;
         delete friend.dataValues.sender;
         delete friend.dataValues.recipient;
     })
@@ -88,8 +89,31 @@ router.get('/:id/payments/', asyncHandler(async (req: any, res: any) => {
                 {recipientId: id},
                 {senderId: id}
             ]
-        }
+        },
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
     });
+
+    payments.forEach((payment: any) => {
+        const isSender: boolean = id === payment.dataValues.senderId;
+        const paymentData = isSender ? payment.dataValues.recipient : payment.dataValues.sender;
+
+        payment.dataValues.firstName = paymentData.firstName;
+        payment.dataValues.lastName = paymentData.lastName;
+        payment.dataValues.username = paymentData.username;
+        payment.dataValues.imgUrl = paymentData.imgUrl;
+        payment.dataValues.otherId = paymentData.id;
+        delete payment.dataValues.sender;
+        delete payment.dataValues.recipient;
+    })
 
     return res.json(payments);
 }))
