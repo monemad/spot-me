@@ -26,7 +26,6 @@ router.post('/', validateTransfer, asyncHandler(async (req: any, res: any) => {
         stripeConf
     });
 
-    
     user.balance = deposit ? +user.balance + +amount : +user.balance - +amount;
     await user.save();
     res.json(transfer);

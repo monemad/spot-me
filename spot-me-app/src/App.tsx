@@ -9,6 +9,8 @@ import { getPayments } from 'store/payments';
 import { getTransfers } from 'store/transfers';
 import Navigation from 'components/Navigation';
 import Home from 'components/Home';
+import Friends from 'components/Friends';
+import History from 'components/History';
 
 function App() {
     const dispatch: any = useDispatch();
@@ -29,9 +31,8 @@ function App() {
             <Navigation />
             <Routes>
                 <Route path="/" element={<Home />}/>
-                <Route path="/friends" element={<>Friends</>}/>
-                <Route path="/friends" element={<>Friends</>}/>
-                <Route path="/history" element={<>History</>}/>
+                <Route path="/friends" element={<Friends />}/>
+                <Route path="/history" element={<History />}/>
                 <Route element={<>404</>}/>
             </Routes>
         </>

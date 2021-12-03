@@ -1,4 +1,4 @@
 export interface ModalChildProps {
-    props?: object;
+    props?: any;
     setShowModal: (param: boolean) => void;
 }
