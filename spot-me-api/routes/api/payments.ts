@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import asyncHandler from 'express-async-handler';
 import db from '../../db/models';
 import { validatePayment } from '../../utils/validation';
@@ -9,6 +9,11 @@ const { Payment, User } = db;
 router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
     const { senderId, recipientId, amount, memo, fulfilled } = req.body;
 
+    const sender = await User.scope('currentUser').findByPk(senderId);
+    if (+sender.balance < +amount) {
+        return res.status(400).json({error: 'Insufficient funds'})
+    }
+
     const payment = await Payment.create({
         senderId,
         recipientId,
@@ -18,7 +23,6 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
     });
 
     if (fulfilled) {
-        const sender = await User.scope('currentUser').findByPk(senderId);
         const recipient = await User.scope('currentUser').findByPk(recipientId);
         sender.balance= +sender.balance - +amount;
         recipient.balance= +recipient.balance + +amount;
@@ -31,12 +35,16 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
+    
     const payment = await Payment.findByPk(id);
+    const sender = await User.scope('currentUser').findByPk(payment.senderId);
+    if (+sender.balance < +payment.amount) {
+        return res.status(400).json({error: 'Insufficient funds'})
+    }
 
     payment.fulfilled = true;
     await payment.save();
 
-    const sender = await User.scope('currentUser').findByPk(payment.senderId);
     const recipient = await User.scope('currentUser').findByPk(payment.recipientId);
     sender.balance= +sender.balance - +payment.amount;
     recipient.balance= +recipient.balance + +payment.amount;

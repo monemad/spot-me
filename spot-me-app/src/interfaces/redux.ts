@@ -10,5 +10,9 @@ interface SessionState {
 }
 
 export interface State {
-    session: SessionState
+    session: SessionState;
+    friends: any;
+    payments: any;
+    transfers: any;
+    searchResults: any;
 }

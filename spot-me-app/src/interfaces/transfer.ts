@@ -10,5 +10,5 @@ export interface Transfer {
 export interface TransferCreationData {
     userId: number;
     amount: number;
-    deposit: number;
+    deposit: boolean;
 }

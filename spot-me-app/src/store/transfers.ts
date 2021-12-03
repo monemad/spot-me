@@ -34,11 +34,11 @@ export const createTransfer = ({ userId, amount, deposit }: TransferCreationData
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
+        body: JSON.stringify({
             userId,
             amount,
             deposit
-        }
+        })
     });
 
     if(response.ok) {
