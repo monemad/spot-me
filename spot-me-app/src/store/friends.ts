@@ -33,7 +33,7 @@ export const getFriends = (id: number) => async (dispatch: any) => {
     const response = await csrfFetch(`/api/users/${id}/friends/`);
     const friends = await response.json();
     dispatch(loadFriends(friends));
-    return response;
+    return id;
 };
 
 export const createFriend = ({senderId, recipientId, confirmed}: FriendCreationData) => async (dispatch: any) => {
