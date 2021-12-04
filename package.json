@@ -2,7 +2,7 @@
     "name": "spot-me",
     "version": "1.0.0",
     "description": "Peer-to-payment app to allow users to send/request money from their friends",
-    "main": "index.ts",
+    "main": "index.js",
     "scripts": {
         "heroku-postbuild": "npm run build --prefix frontend",
         "install": "npm --prefix backend install backend && npm --prefix frontend install frontend",
