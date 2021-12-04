@@ -6,7 +6,7 @@ import db from '../../db/models'
 import { validateLogin } from '../../utils/validation';
 
 const router = express.Router();
-const User = db.User;
+const User: any = db.User;
 
 router.post('/', validateLogin, asyncHandler(async (req: any, res: any, next: any) => {
     const { credential, password } = req.body;
