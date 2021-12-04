@@ -22,5 +22,8 @@
     "bugs": {
         "url": "https://github.com/monemad/spot-me/issues"
     },
-    "homepage": "https://github.com/monemad/spot-me#readme"
+    "homepage": "https://github.com/monemad/spot-me#readme",
+    "engines": {
+        "node": "12.22.1"
+    }
 }
