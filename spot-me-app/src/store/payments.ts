@@ -33,7 +33,7 @@ export const getPayments = (id: number) => async (dispatch: any) => {
     const response = await csrfFetch(`/api/users/${id}/payments/`);
     const payments = await response.json();
     dispatch(loadPayments(payments));
-    return response;
+    return id;
 };
 
 export const createPayment = ({senderId, recipientId, amount, memo, fulfilled}: PaymentCreationData) => async (dispatch: any) => {
@@ -42,13 +42,13 @@ export const createPayment = ({senderId, recipientId, amount, memo, fulfilled}: 
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
+        body: JSON.stringify({
             senderId,
             recipientId,
             amount,
             memo,
             fulfilled
-        }
+        })
     });
 
     if(response.ok) {

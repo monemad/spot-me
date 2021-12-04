@@ -14,7 +14,7 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
         return res.status(400).json({error: 'Insufficient funds'})
     }
 
-    const payment = await Payment.create({
+    let payment = await Payment.create({
         senderId,
         recipientId,
         amount,
@@ -30,13 +30,48 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
         await recipient.save();
     }
 
+    payment = await Payment.findByPk(payment.id, {
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
+    })
+
+    const isSender: boolean = fulfilled;
+    const paymentData = isSender ? payment.dataValues.recipient : payment.dataValues.sender;
+
+    payment.dataValues.firstName = paymentData.firstName;
+    payment.dataValues.lastName = paymentData.lastName;
+    payment.dataValues.username = paymentData.username;
+    payment.dataValues.imgUrl = paymentData.imgUrl;
+    payment.dataValues.otherId = paymentData.id;
+    delete payment.dataValues.sender;
+    delete payment.dataValues.recipient;
+
     res.json(payment);
 }));
 
 router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     const id: number = +req.params.id;
     
-    const payment = await Payment.findByPk(id);
+    const payment = await Payment.findByPk(id, {
+        include: [
+            {
+                model: User,
+                as: "sender"
+            },
+            {
+                model: User,
+                as: "recipient"
+            }
+        ]
+    });
     const sender = await User.scope('currentUser').findByPk(payment.senderId);
     if (+sender.balance < +payment.amount) {
         return res.status(400).json({error: 'Insufficient funds'})
@@ -50,8 +85,28 @@ router.put('/:id/', asyncHandler(async (req: any, res: any) => {
     recipient.balance= +recipient.balance + +payment.amount;
     await sender.save();
     await recipient.save();
+
+    const paymentData = payment.dataValues.recipient;
+
+    payment.dataValues.firstName = paymentData.firstName;
+    payment.dataValues.lastName = paymentData.lastName;
+    payment.dataValues.username = paymentData.username;
+    payment.dataValues.imgUrl = paymentData.imgUrl;
+    payment.dataValues.otherId = paymentData.id;
+    delete payment.dataValues.sender;
+    delete payment.dataValues.recipient;
         
     res.json(payment);
+}));
+
+router.delete('/:id/', asyncHandler(async (req: any, res: any) => {
+    const id: number = +req.params.id;
+    
+    const payment = await Payment.findByPk(id);
+    if (payment.fulfilled) return res.json({message: "Cannot delete a fulfilled Spot"}, 401);
+
+    await payment.destroy();
+    res.json({message: "Successfully deleted"});
 }));
 
 export default router;

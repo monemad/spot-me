@@ -5,7 +5,7 @@ import { Button } from '@mui/material'
 type ButtonVariant = "text" | "outlined" | "contained";
 
 interface CustomModalProps {
-    buttonText: string;
+    buttonText: any;
     variant?: ButtonVariant;
     Element: any;
     props?: object;

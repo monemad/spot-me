@@ -11,20 +11,19 @@ import Navigation from 'components/Navigation';
 import Home from 'components/Home';
 import Friends from 'components/Friends';
 import History from 'components/History';
+import PendingSpots from 'components/PendingSpots';
 
 function App() {
     const dispatch: any = useDispatch();
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-    useEffect(() => {
+    useEffect((() => {
         dispatch(sessionActions.restoreUser())
-            .then((user: SessionUser) => {
-                dispatch(getFriends(user.id));
-                dispatch(getPayments(user.id));
-                dispatch(getTransfers(user.id));
-            })
+            .then((user: SessionUser) => dispatch(getFriends(user.id)))
+            .then((id: number) => dispatch(getPayments(id)))
+            .then((id: number) => dispatch(getTransfers(id)))
             .then(() => setIsLoaded(true));
-    }, [dispatch]);
+    }), [dispatch]);
 
     return ( isLoaded ?
         <>
@@ -33,11 +32,12 @@ function App() {
                 <Route path="/" element={<Home />}/>
                 <Route path="/friends" element={<Friends />}/>
                 <Route path="/history" element={<History />}/>
-                <Route element={<>404</>}/>
+                <Route path="/pending-spots" element={<PendingSpots />}/>
+                <Route path="*" element={<>404</>}/>
             </Routes>
         </>
         :
-        <></>
+        <>Please wait...</>
         
     );
 }

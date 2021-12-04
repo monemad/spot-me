@@ -25,7 +25,7 @@ export const getTransfers = (id: number) => async (dispatch: any) => {
     const response = await csrfFetch(`/api/users/${id}/transfers/`);
     const transfers = await response.json();
     dispatch(loadTransfers(transfers));
-    return response;
+    return id;
 };
 
 export const createTransfer = ({ userId, amount, deposit }: TransferCreationData) => async (dispatch: any) => {

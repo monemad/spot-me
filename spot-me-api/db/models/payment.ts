@@ -23,9 +23,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         fulfilled!: boolean;
 
         static associate(models: any) {
-            Payment.belongsTo(models.User, { foreignKey: 'senderId' });
-            Payment.belongsTo(models.User, { foreignKey: 'recipientId' });
+            Payment.belongsTo(models.User, { foreignKey: 'senderId', as: 'sender' });
+            Payment.belongsTo(models.User, { foreignKey: 'recipientId', as: 'recipient' });
         }
+        
     };
     Payment.init({
         id: {
