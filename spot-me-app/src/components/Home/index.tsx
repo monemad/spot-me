@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { State } from 'interfaces/redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -6,12 +5,14 @@ import { Button, Snackbar } from '@mui/material';
 import CustomModal from 'components/modals/CustomModal';
 import TransferForm from 'components/TransferForm';
 import SpotForm from 'components/SpotForm';
+import { useSnackbar } from 'context/Snackbar';
 
 function Home() {
     const navigate = useNavigate();
     const sessionUser = useSelector((state: State) => state.session.user)
-    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
-    const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+    // const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+    // const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+    const { openSnackbar, setOpenSnackbar, snackbarMessage }: any = useSnackbar();
 
     return ( sessionUser &&
         <>
@@ -22,12 +23,12 @@ function Home() {
                     <p>Balance <span>${sessionUser.balance}</span></p>
                 </div>
                 <div className='transfer-div'>
-                    <CustomModal buttonText='Transfer Funds' Element={TransferForm} props={{setOpenSnackbar, setSnackbarMessage}} />
+                    <CustomModal buttonText='Transfer Funds' Element={TransferForm} />
                 </div>
 
                 <div className='button-div'>
                     <Button onClick={() => navigate('/friends')}>Friends</Button>
-                    <CustomModal buttonText='Send/Request a Spot' Element={SpotForm} props={{setOpenSnackbar, setSnackbarMessage}} />
+                    <CustomModal buttonText='Send/Request a Spot' Element={SpotForm} />
                     <Button onClick={() => navigate('/history')}>History</Button>
                 </div>
             </div>

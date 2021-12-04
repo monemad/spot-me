@@ -12,10 +12,13 @@ import Home from 'components/Home';
 import Friends from 'components/Friends';
 import History from 'components/History';
 import PendingSpots from 'components/PendingSpots';
+import { Snackbar } from '@mui/material';
+import { useSnackbar } from 'context/Snackbar';
 
 function App() {
     const dispatch: any = useDispatch();
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const { openSnackbar, setOpenSnackbar, snackbarMessage, setSnackbarMessage }: any = useSnackbar();
 
     useEffect((() => {
         dispatch(sessionActions.restoreUser())
@@ -35,6 +38,15 @@ function App() {
                 <Route path="/pending-spots" element={<PendingSpots />}/>
                 <Route path="*" element={<>404</>}/>
             </Routes>
+            <Snackbar 
+                open={openSnackbar}
+                autoHideDuration={1500}
+                onClose={() => {
+                    setOpenSnackbar(false);
+                    setSnackbarMessage("");
+                }}
+                message={snackbarMessage}
+            />
         </>
         :
         <>Please wait...</>

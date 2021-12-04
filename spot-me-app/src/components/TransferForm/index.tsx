@@ -7,14 +7,15 @@ import { createTransfer } from "store/transfers";
 import { TransferCreationData } from "interfaces/transfer";
 import { restoreUser } from "store/session";
 import { ModalChildProps } from "interfaces/modal";
+import { useSnackbar } from "context/Snackbar";
 
-function TransferForm({ setShowModal, props }: ModalChildProps) {
+function TransferForm({ setShowModal }: ModalChildProps) {
     const dispatch = useDispatch();
     const sessionUser = useSelector((state: State) => state.session.user);
     const [deposit, setDeposit] = useState<boolean>(true);
     const [amount, setAmount] = useState<number>(deposit ? 100 : sessionUser.balance);
     const [loading, setLoading] = useState<boolean>(false);
-    const { setOpenSnackbar, setSnackbarMessage } = props;
+    const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
 
     const updateDeposit = (e: any) => {
         setDeposit(e.target.value === "true");

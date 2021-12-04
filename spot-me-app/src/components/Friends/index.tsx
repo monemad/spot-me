@@ -6,6 +6,7 @@ import { State } from "interfaces/redux";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { confirmFriend, deleteFriend } from "store/friends";
+import { useSnackbar } from "context/Snackbar";
 
 function Friends() {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function Friends() {
     const [displayFriends, setDisplayFriends] = useState<Array<Friend>>(confirmedFriends);
     const [buttonText, setButtonText] = useState<any>(<i className="fas fa-ellipsis-v"></i>);
     const [triggerUseEffect, toggletriggerUseEffect] = useState<boolean>(false);
+    const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
 
     const updateTab = (_e:any, value: FriendOption) => {
         setTab(value);
@@ -31,10 +33,14 @@ function Friends() {
     const handleClick = async (id: number) => {
         switch(buttonText) {
             case "Cancel":
+                setSnackbarMessage("Friend request deleted!");
                 await dispatch(deleteFriend(id));
+                setOpenSnackbar(true);
                 break;
             case "Confirm":
+                setSnackbarMessage("Friend request accepted!");
                 await dispatch(confirmFriend(id));
+                setOpenSnackbar(true);
                 break;
             default:
                 break;
