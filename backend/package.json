@@ -10,7 +10,7 @@
         "reset-db": "npx dotenv sequelize db:seed:undo:all && npx dotenv sequelize db:migrate:undo:all && npx dotenv sequelize db:migrate && npx dotenv sequelize db:seed:all",
         "start": "per-env",
         "start:development": "nodemon -r dotenv/config ./bin/www.ts",
-        "start:production": "node ./bin/www.ts"
+        "start:production": "node ./build/bin/www"
     },
     "author": "",
     "license": "ISC",
@@ -32,6 +32,16 @@
         "typescript": "^4.5.2"
     },
     "dependencies": {
+        "@types/bcryptjs": "^2.4.2",
+        "@types/cookie-parser": "^1.4.2",
+        "@types/cors": "^2.8.12",
+        "@types/csurf": "^1.11.2",
+        "@types/express": "^4.17.13",
+        "@types/jsonwebtoken": "^8.5.6",
+        "@types/morgan": "^1.9.3",
+        "@types/node": "^16.11.10",
+        "@types/node-fetch": "^2.5.12",
+        "@types/validator": "^13.7.0",
         "bcryptjs": "^2.4.3",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
