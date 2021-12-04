@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path'
 import morgan from 'morgan';
 import cors from 'cors';
 import csurf from 'csurf';
@@ -14,6 +15,8 @@ const { environment } = require('./config');
 const isProduction: boolean = environment === 'production';
 
 const app = express();
+if (isProduction)
+    app.use(express.static(path.resolve(__dirname, '../frontend/build')));
 
 app.use(morgan('dev'));
 app.use(cookieParser());
