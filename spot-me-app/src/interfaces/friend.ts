@@ -15,7 +15,7 @@ export interface Friend {
 export interface FriendCreationData {
     senderId: number;
     recipientId: number;
-    confirmed: number
+    confirmed: boolean
 }
 
 export type FriendOption = "confirmed" | "sent" | "received" 
