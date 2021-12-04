@@ -8,6 +8,7 @@ import configureStore from './store';
 import { restoreCSRF, csrfFetch } from './store/csrf';
 import * as sessionActions from './store/session';
 import { ModalProvider } from './context/Modal';
+import SnackbarProvider from './context/Snackbar'
 
 const store: any = configureStore();
 
@@ -23,9 +24,11 @@ function Root() {
     return (
         <Provider store={store}>
             <ModalProvider>
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
+                <SnackbarProvider>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </SnackbarProvider>
             </ModalProvider>
         </Provider>
     )

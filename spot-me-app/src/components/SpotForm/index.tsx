@@ -5,6 +5,7 @@ import { State } from "interfaces/redux";
 import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPayment } from "store/payments";
+import { useSnackbar } from "context/Snackbar"
 
 type SpotType = "send" | "receive";
 
@@ -13,7 +14,7 @@ interface SelectedFriend {
     id: string;
 }
 
-function SpotForm({ setShowModal, props}: ModalChildProps) {
+function SpotForm({ setShowModal }: ModalChildProps) {
     const dispatch = useDispatch();
     const sessionUser = useSelector((state: State) => state.session.user);
     const friends: Array<Friend> = Object.values(useSelector((state: State) => state.friends));
@@ -25,7 +26,8 @@ function SpotForm({ setShowModal, props}: ModalChildProps) {
     const [amount, setAmount] = useState<number | string>(0);
     const [memo, setMemo] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const { setOpenSnackbar, setSnackbarMessage } = props;
+    const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
+
 
     const updateSpotType = (e: any) => {
         setSpotType(e.target.value);

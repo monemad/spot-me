@@ -6,7 +6,8 @@ import { State } from "interfaces/redux";
 import { SessionUser } from "interfaces/user";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { confirmPayment, deletePayment } from '../../store/payments'
+import { confirmPayment, deletePayment } from '../../store/payments';
+import { useSnackbar } from "context/Snackbar";
 
 type PaymentOption = "sent" | "received";
 
@@ -25,6 +26,7 @@ function PendingSpots() {
     const [triggerConfirmSpot, toggleTriggerConfirmSpot] = useState<boolean>(false);
     const [paymentId, setPaymentId] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+    const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
 
     useEffect(() => {
         switch(tab) {
@@ -32,7 +34,7 @@ function PendingSpots() {
                 setDisplayPayments(pendingPaymentsSent);
                 setButtonText("Cancel");
                 break;
-            case "received":
+            case "received":                
                 setDisplayPayments(pendingPaymentsReceived);
                 setButtonText("Spot");
                 break;
@@ -44,11 +46,15 @@ function PendingSpots() {
     useEffect(() => {
         setLoading(true);
         if (triggerDeleteSpot) {
+            setSnackbarMessage("Spot deleted!")
             dispatch(deletePayment(paymentId))
+                .then(() => setOpenSnackbar(true))
                 .then(() => toggleTriggerDeleteSpot(false))
                 .then(() => toggletriggerUseEffect(!triggerUseEffect));
         } else if (triggerConfirmSpot) {
+            setSnackbarMessage("Spot paid!")
             dispatch(confirmPayment(paymentId))
+                .then(() => setOpenSnackbar(true))
                 .then(() => toggleTriggerConfirmSpot(false))
                 .then(() => toggletriggerUseEffect(!triggerUseEffect));
         } else {

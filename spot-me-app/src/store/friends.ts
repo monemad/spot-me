@@ -42,11 +42,11 @@ export const createFriend = ({senderId, recipientId, confirmed}: FriendCreationD
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
+        body: JSON.stringify({
             senderId,
             recipientId,
             confirmed
-        }
+        })
     });
 
     if(response.ok) {
