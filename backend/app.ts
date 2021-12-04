@@ -47,6 +47,11 @@ app.use(
 
 app.use(routes);
 
+if(isProduction)
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+    })
+
 // Error handling
 
 export class RequestError extends Error {
