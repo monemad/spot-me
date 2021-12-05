@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { confirmFriend, deleteFriend } from "store/friends";
 import { useSnackbar } from "context/Snackbar";
+import { useNavigate } from "react-router";
 
 function Friends() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const sessionUser = useSelector((state: State) => state.session.user);
     const friends: Array<Friend> = Object.values(useSelector((state: State) => state.friends));
     const confirmedFriends = friends.filter((friend: Friend) => friend.confirmed);
@@ -21,6 +23,10 @@ function Friends() {
     const [buttonText, setButtonText] = useState<any>(<i className="fas fa-ellipsis-v"></i>);
     const [triggerUseEffect, toggletriggerUseEffect] = useState<boolean>(false);
     const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
+
+    useEffect(() => {
+        if (!sessionUser) navigate('/');
+    }, [sessionUser])
 
     const updateTab = (_e:any, value: FriendOption) => {
         setTab(value);

@@ -21,10 +21,10 @@ function Home() {
                 </div>
 
                 <div className='button-div'>
-                    <CustomModal buttonText='Transfer Funds' Element={TransferForm} />
-                    <Button onClick={() => navigate('/friends')}>Friends</Button>
-                    <CustomModal buttonText='Send/Request a Spot' Element={SpotForm} />
-                    <Button onClick={() => navigate('/history')}>History</Button>
+                    <CustomModal buttonText='Transfer Funds' variant='outlined' Element={TransferForm} />
+                    <Button variant='outlined' onClick={() => navigate('/friends')}>Friends</Button>
+                    <CustomModal buttonText='Send/Request a Spot'variant='outlined' Element={SpotForm} />
+                    <Button variant='outlined' onClick={() => navigate('/history')}>History</Button>
                 </div>
             </div>
         </>

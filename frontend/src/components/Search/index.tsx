@@ -1,18 +1,24 @@
 import { Avatar, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import { FriendCreationData } from "interfaces/friend";
 import { State } from "interfaces/redux";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router";
 import { createFriend } from "store/friends";
 import { getSearchResults } from "store/searchResults";
 
 function Search() {
     const dispatch: any = useDispatch();
+    const navigate = useNavigate();
     const searchResults = Object.values(useSelector((state: State) => state.searchResults))
     const friends = Object.values(useSelector((state: State) => state.friends))
     const sessionUser = useSelector((state: State) => state.session.user)
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!sessionUser) navigate('/');
+    }, [sessionUser])
 
     const updateSearchQuery = (e:any) => {
         setSearchQuery(e.target.value)

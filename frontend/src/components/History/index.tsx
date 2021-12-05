@@ -4,17 +4,23 @@ import { State } from "interfaces/redux";
 import { Transfer } from "interfaces/transfer";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 type HistoryOption = "payments" | "transfers";
 type HistoryItem = Payment | Transfer;
 
 function History() {
+    const navigate = useNavigate();
     const [tab, setTab] = useState<HistoryOption>("payments");
     const sessionUser = useSelector((state: State) => state.session.user);
     const payments: Array<Payment> = Object.values(useSelector((state: State) => state.payments));
     const paymentHistory: Array<Payment> = payments.filter((payment: Payment) => payment.fulfilled)
     const transferHistory: Array<Transfer> = Object.values(useSelector((state: State) => state.transfers));
     const [displayHistory, setDisplayHistory] = useState<Array<HistoryItem>>(paymentHistory);
+
+    useEffect(() => {
+        if (!sessionUser) navigate('/');
+    }, [sessionUser])
 
     useEffect(() => {
         switch(tab) {
