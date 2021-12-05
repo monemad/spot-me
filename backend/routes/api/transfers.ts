@@ -15,17 +15,11 @@ router.post('/', validateTransfer, asyncHandler(async (req: any, res: any) => {
     if (!deposit && (+user.balance < +amount || +(await getAvailableBalance()) < +amount) )
         return res.status(400).json({error: "Insufficient funds"})
 
-
-    let stripeConf: string | undefined = '';
-
-    try {
-        stripeConf = deposit ? 
-            await chargeUser(amount, `Deposit to account #${userId}`)
-            :
-            await payoutUser(amount, `Withdrawal from account #${userId}`)
-    } catch(e: any) {
-        return res.json(e)
-    }
+    const stripeConf = deposit ? 
+        await chargeUser(amount, `Deposit to account #${userId}`)
+        :
+        await payoutUser(amount, `Withdrawal from account #${userId}`) || `Withdrawal of $${amount}`
+   
 
     const transfer = await Transfer.create({
         userId,
