@@ -105,6 +105,8 @@ dist
 
 package-lock.json
 
+backend/build
+
 scratch.js
 
 notes.md
