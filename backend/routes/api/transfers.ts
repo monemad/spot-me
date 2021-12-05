@@ -11,8 +11,8 @@ router.post('/', validateTransfer, asyncHandler(async (req: any, res: any) => {
     const { userId, amount, deposit } = req.body;
 
     const user = await User.scope('currentUser').findByPk(+userId);
-    // if (!deposit && (+user.balance < +amount || +(await getAvailableBalance()) < +amount) )
-    //     return res.status(400).json({error: "Insufficient funds"})
+    if (!deposit && (+user.balance < +amount || +(await getAvailableBalance()) < +amount) )
+        return res.status(400).json({error: "Insufficient funds"})
 
     const stripeConf = deposit ? 
         await chargeUser(amount, `Deposit to account #${userId}`)
