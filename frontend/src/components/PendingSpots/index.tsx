@@ -16,7 +16,8 @@ function PendingSpots() {
     const dispatch: any = useDispatch();
     const navigate = useNavigate();
     const sessionUser: SessionUser = useSelector((state: State) => state.session.user);
-    const payments: Array<Payment> = Object.values(useSelector((state: State) => state.payments));
+    const paymentsState = useSelector((state: State) => state.payments);
+    const payments: Array<Payment> = Object.values(paymentsState);
     const pendingPayments = payments.filter((payment: Payment) => !payment.fulfilled);
     const pendingPaymentsSent = pendingPayments.filter((payment: Payment) => payment.recipientId === sessionUser?.id);
     const pendingPaymentsReceived = pendingPayments.filter((payment: Payment) => payment.senderId === sessionUser?.id);
@@ -58,6 +59,12 @@ function PendingSpots() {
                 .then(() => toggleTriggerDeleteSpot(false))
                 .then(() => toggletriggerUseEffect(!triggerUseEffect));
         } else if (triggerConfirmSpot) {
+            if (+paymentsState[paymentId].amount > +sessionUser.balance){
+                setSnackbarMessage("Balance is too low!");
+                setOpenSnackbar(true);
+                setLoading(false);
+                return;
+            }
             setSnackbarMessage("Spot paid!")
             dispatch(confirmPayment(paymentId))
                 .then(() => setOpenSnackbar(true))
