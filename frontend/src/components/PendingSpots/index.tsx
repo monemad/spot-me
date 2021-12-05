@@ -59,7 +59,7 @@ function PendingSpots() {
                 .then(() => toggleTriggerDeleteSpot(false))
                 .then(() => toggletriggerUseEffect(!triggerUseEffect));
         } else if (triggerConfirmSpot) {
-            if (paymentsState[paymentId] > sessionUser.balance){
+            if (+paymentsState[paymentId].amount > +sessionUser.balance){
                 setSnackbarMessage("Balance is too low!");
                 setOpenSnackbar(true);
                 setLoading(false);

@@ -10,7 +10,7 @@ router.post('/', validatePayment, asyncHandler(async (req: any, res: any) => {
     const { senderId, recipientId, amount, memo, fulfilled } = req.body;
 
     const sender = await User.scope('currentUser').findByPk(senderId);
-    if (+sender.balance < +amount) {
+    if (+sender.balance < +amount && fulfilled) {
         return res.status(400).json({error: 'Insufficient funds'})
     }
 
