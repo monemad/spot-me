@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SessionUser } from 'interfaces/user';
 import * as sessionActions from "./store/session";
 import { getFriends } from 'store/friends';
@@ -15,11 +15,11 @@ import PendingSpots from 'components/PendingSpots';
 import Search from 'components/Search';
 import { Snackbar } from '@mui/material';
 import { useSnackbar } from 'context/Snackbar';
-// import { State } from 'interfaces/redux';
+import { State } from 'interfaces/redux';
 
 function App() {
     const dispatch: any = useDispatch();
-    // const sessionUser = useSelector((state:State) => state.session.user)
+    const sessionUser = useSelector((state:State) => state.session.user)
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const { openSnackbar, setOpenSnackbar, snackbarMessage, setSnackbarMessage }: any = useSnackbar();
 
@@ -31,6 +31,15 @@ function App() {
             .then(() => setIsLoaded(true))
             .catch(() => setIsLoaded(true))
     }), [dispatch]);
+
+    useEffect((() => {
+        if (!sessionUser) return;
+        dispatch(getFriends(sessionUser.id))
+            .then((id: number) => dispatch(getPayments(id)))
+            .then((id: number) => dispatch(getTransfers(id)))
+            .then(() => setIsLoaded(true))
+            .catch(() => setIsLoaded(true))
+    }), [sessionUser]);
 
     return ( isLoaded ?
         <>

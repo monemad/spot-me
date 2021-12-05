@@ -17,7 +17,7 @@ function Home() {
                 <div className='profile-image-div'>
                     <img src={sessionUser.imgUrl} alt={sessionUser.username + ' profile image'}/>
                     <h2>{sessionUser.username}</h2>
-                    <p>Balance <span>${sessionUser.balance}</span></p>
+                    <p>Balance: <span>${sessionUser.balance}</span></p>
                 </div>
 
                 <div className='button-div'>

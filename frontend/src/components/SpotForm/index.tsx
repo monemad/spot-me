@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPayment } from "store/payments";
 import { useSnackbar } from "context/Snackbar"
+import { restoreUser } from "store/session";
 
 type SpotType = "send" | "receive";
 
@@ -65,7 +66,8 @@ function SpotForm({ setShowModal }: ModalChildProps) {
             fulfilled: spotType === "send"
         }
 
-        await dispatch(createPayment(payload))
+        await dispatch(createPayment(payload));
+        await dispatch(restoreUser());
 
         setSnackbarMessage(spotType === "send" ? "Spot sent!" : "Spot requested!");
         setOpenSnackbar(true);
@@ -102,7 +104,7 @@ function SpotForm({ setShowModal }: ModalChildProps) {
 
                     />
                 </div>
-                <TextField type='number' value={amount} onChange={updateAmount} InputProps={{inputProps: {min: 0, max: 999999.99, step: 0.01, increment: 1}}}/>
+                <TextField type='number' value={amount} onChange={updateAmount} InputProps={{inputProps: {min: 0, max: spotType==='send' ? sessionUser.balance : 999999.99, step: 0.01, increment: 1}}}/>
                 <TextField type='text' value={memo} onChange={updateMemo} InputProps={{inputProps: {maxLength: 256}}}/>
                 { !loading ?
                     <Button disabled={!canSubmit()} type='submit'>{spotType === "send" ? "Send" : "Request"}</Button>

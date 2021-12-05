@@ -24,8 +24,8 @@ function Navigation(){
     }, [payments])
 
     const handleLogout = async () => {
-        await dispatch(logout());
         navigate('/');
+        await dispatch(logout());
     }
 
     return (

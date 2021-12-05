@@ -13,7 +13,7 @@ function TransferForm({ setShowModal }: ModalChildProps) {
     const dispatch = useDispatch();
     const sessionUser = useSelector((state: State) => state.session.user);
     const [deposit, setDeposit] = useState<boolean>(true);
-    const [amount, setAmount] = useState<number>(deposit ? 100 : sessionUser.balance);
+    const [amount, setAmount] = useState<number | string>(deposit ? 100 : sessionUser.balance);
     const [loading, setLoading] = useState<boolean>(false);
     const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
 
@@ -22,7 +22,7 @@ function TransferForm({ setShowModal }: ModalChildProps) {
     }
 
     const updateAmount = (e: any) => {
-        setAmount(+e.target.value);
+        setAmount(+e.target.value || '');
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -30,7 +30,7 @@ function TransferForm({ setShowModal }: ModalChildProps) {
 
         const data: TransferCreationData = {
             userId: sessionUser.id,
-            amount,
+            amount: +amount,
             deposit
         }
         setLoading(true);
@@ -49,6 +49,8 @@ function TransferForm({ setShowModal }: ModalChildProps) {
     useEffect(() => {
         if (amount > 999999.99)
             setAmount(999999.99)
+        if (amount > sessionUser.balance && !deposit)
+            setAmount(sessionUser.balance)
     }, [amount])
     
     return (
@@ -63,7 +65,7 @@ function TransferForm({ setShowModal }: ModalChildProps) {
                     <FormControlLabel value={true} onChange={updateDeposit} control={<Radio />} label="Deposit" />
                     <FormControlLabel value={false} onChange={updateDeposit} control={<Radio />} label="Withdrawal" />
                 </RadioGroup>
-                <TextField type='number' value={amount} onChange={updateAmount} InputProps={{inputProps: {min: 0.5, max: 999999.99, step: 0.01, increment: 1}}}/>
+                <TextField type='number' value={amount} onChange={updateAmount} InputProps={{inputProps: {min: 0.5, max: !deposit ? sessionUser.balance : 999999.99, step: 0.01, increment: 1}}}/>
                 { !loading ?
                     <Button disabled={amount < 0.50} type='submit'>{deposit ? "Deposit" : "Withdraw"}</Button>
                     :
