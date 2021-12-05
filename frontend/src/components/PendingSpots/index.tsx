@@ -8,16 +8,18 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { confirmPayment, deletePayment } from '../../store/payments';
 import { useSnackbar } from "context/Snackbar";
+import { useNavigate } from "react-router";
 
 type PaymentOption = "sent" | "received";
 
 function PendingSpots() {
     const dispatch: any = useDispatch();
+    const navigate = useNavigate();
     const sessionUser: SessionUser = useSelector((state: State) => state.session.user);
     const payments: Array<Payment> = Object.values(useSelector((state: State) => state.payments));
     const pendingPayments = payments.filter((payment: Payment) => !payment.fulfilled);
-    const pendingPaymentsSent = pendingPayments.filter((payment: Payment) => payment.recipientId === sessionUser.id);
-    const pendingPaymentsReceived = pendingPayments.filter((payment: Payment) => payment.senderId === sessionUser.id);
+    const pendingPaymentsSent = pendingPayments.filter((payment: Payment) => payment.recipientId === sessionUser?.id);
+    const pendingPaymentsReceived = pendingPayments.filter((payment: Payment) => payment.senderId === sessionUser?.id);
     const [tab, setTab] = useState<PaymentOption>("received")
     const [displayPayments, setDisplayPayments] = useState<Array<Payment>>(pendingPaymentsReceived);
     const [buttonText, setButtonText] = useState<string>("");
@@ -27,6 +29,10 @@ function PendingSpots() {
     const [paymentId, setPaymentId] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const { setOpenSnackbar, setSnackbarMessage }: any = useSnackbar();
+
+    useEffect(() => {
+        if (!sessionUser) navigate('/');
+    }, [sessionUser])
 
     useEffect(() => {
         switch(tab) {
@@ -86,7 +92,7 @@ function PendingSpots() {
                         </ListItemAvatar>
                         <ListItemText
                             primary={`${payment.firstName} ${payment.lastName}`}
-                            secondary={`$${payment.amount}`}
+                            secondary={`$${payment.amount}: ${payment.memo}`}
                         />
                         { !loading ? 
                             <CustomModal buttonText={buttonText} variant="text" Element={Confirmation} props={{

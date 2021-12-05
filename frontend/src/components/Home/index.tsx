@@ -1,15 +1,25 @@
 import { State } from 'interfaces/redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Button } from '@mui/material';
 import CustomModal from 'components/modals/CustomModal';
 import TransferForm from 'components/TransferForm';
 import SpotForm from 'components/SpotForm';
+import { login } from 'store/session';
 
 
 function Home() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector((state: State) => state.session.user)
+
+    const demoLogin = () => {
+        const credentials = {
+            credential: 'demouser',
+            password: 'password'
+        }
+        dispatch(login(credentials))
+    }
 
     return ( sessionUser ?
         <>
@@ -29,7 +39,10 @@ function Home() {
             </div>
         </>
         :
-        <>SPLASH</>
+        <>
+            <h2>Please log in or sign up to access SpotMe</h2>
+            <Button onClick={demoLogin}>Or, try it as a demo user.</Button>
+        </>
     )
 }
 
