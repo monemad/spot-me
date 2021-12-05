@@ -82,8 +82,8 @@ function Friends() {
                 aria-label="friends"
             >
                 <Tab label="Friends" value="confirmed"/>
-                <Tab label="Pending Requests" value="sent"/>
-                <Tab label="Received Requests" value="received"/>
+                <Tab label="Sent" value="sent"/>
+                <Tab label="Received" value="received"/>
             </Tabs>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 {displayFriends.map((friend: Friend) => 
