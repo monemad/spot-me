@@ -77,7 +77,7 @@ function SpotForm({ setShowModal }: ModalChildProps) {
 
     return (
         <>
-            <h2>Spot Form</h2>
+            <h2>Send or Request a Spot</h2>
             <form onSubmit={handleSubmit}>
                 <RadioGroup
                     aria-label="Type of Spot"
