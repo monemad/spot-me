@@ -17,7 +17,8 @@ router.post('/', validateTransfer, asyncHandler(async (req: any, res: any) => {
     const stripeConf = deposit ? 
         await chargeUser(amount, `Deposit to account #${userId}`)
         :
-        await payoutUser(amount, `Withdrawal from account #${userId}`)
+        // await payoutUser(amount, `Withdrawal from account #${userId}`)
+        'paid'
 
     const transfer = await Transfer.create({
         userId,
