@@ -92,7 +92,7 @@ function PendingSpots() {
                         </ListItemAvatar>
                         <ListItemText
                             primary={`${payment.firstName} ${payment.lastName}`}
-                            secondary={`$${payment.amount}`}
+                            secondary={`$${payment.amount}: ${payment.memo}`}
                         />
                         { !loading ? 
                             <CustomModal buttonText={buttonText} variant="text" Element={Confirmation} props={{

@@ -48,10 +48,11 @@ function History() {
 
     const getText = (history: any, option: 1 | 2) => {
         let primary: string = '';
-        let secondary: string = history.updatedAt;
+        let secondary: string = new Date(history.updatedAt).toDateString();
         
         if (history.fulfilled) {
             primary = isIncoming(history) ? `+ $${history.amount} from ${history.firstName} ${history.lastName}` : `- $${history.amount} to ${history.firstName} ${history.lastName}`;
+            secondary += `: ${history.memo}`;
         } else {
             primary = isIncoming(history) ? `+ $${history.amount} Deposit` : `- $${history.amount} Withdrawal`;
         }
@@ -78,7 +79,7 @@ function History() {
                         </ListItemAvatar>
                         <ListItemText 
                             primary={getText(history, 1)}
-                            secondary={''}
+                            secondary={getText(history, 2)}
                         />
                     </ListItem>
                 )}
