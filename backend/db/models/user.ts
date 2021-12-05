@@ -118,7 +118,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
                 username,
                 email,
                 hashedPassword,
-                imgUrl: 'default-profile-pic.png',
+                imgUrl: 'images/default-profile-pic.png',
                 balance: 0
             });
             return await User.scope('currentUser').findByPk(user.id);

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { State } from 'interfaces/redux';
 import { ModalChildProps } from 'interfaces/modal';
+import { Button, TextField } from '@mui/material';
 
 function LoginForm({ setShowModal }: ModalChildProps) {
     const dispatch: any = useDispatch();
@@ -31,25 +32,25 @@ function LoginForm({ setShowModal }: ModalChildProps) {
             <ul>
                 {errors.map((error, idx) => <li key={idx}>{error}</li>)}
             </ul>
-            <label>
-                Username or Email
-                <input
-                type="text"
-                value={credential}
-                onChange={(e) => setCredential(e.target.value)}
-                required
-                />
-            </label>
-            <label>
-                Password
-                <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                />
-            </label>
-            <button type="submit">Log In</button>
+           
+            <TextField
+            placeholder='Username or Email'
+            type="text"
+            value={credential}
+            onChange={(e) => setCredential(e.target.value)}
+            required
+            />
+
+        
+            <TextField
+            placeholder='Password'
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            />
+            
+            <Button type="submit">Log In</Button>
         </form>
     );
 }

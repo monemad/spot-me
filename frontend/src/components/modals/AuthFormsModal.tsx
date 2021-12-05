@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { useState } from 'react';
 import { Modal } from '../../context/Modal';
 import LoginForm from '../LoginForm';
@@ -12,7 +13,7 @@ function AuthFormsModal({showLogin}: AuthFormsModalProps) {
 
     return (
         <>
-            <button onClick={() => setShowModal(true)}>{showLogin ? 'Login' : 'Sign Up'}</button>
+            <Button onClick={() => setShowModal(true)}>{showLogin ? 'Login' : 'Sign Up'}</Button>
             {showModal && (
                 <Modal onClose={() => setShowModal(false)}>
                     {showLogin ? 

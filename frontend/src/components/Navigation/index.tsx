@@ -31,20 +31,23 @@ function Navigation(){
     return (
         <nav>
             <div>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to='/'><Button>Home</Button></NavLink>
             </div>
             <div>
-                { sessionUser ?
-                    <>
-                        <button onClick={handleLogout}>Logout</button>
-                    </>
-                    :
-                    <>
-                        <AuthFormsModal showLogin={true}/>
-                        <AuthFormsModal showLogin={false}/>
-                    </>
-                }
+                <NavLink to='/search'><Button>Search</Button></NavLink>
             </div>
+            
+            { sessionUser ?
+                <>
+                    <Button onClick={handleLogout}>Logout</Button>
+                </>
+                :
+                <>  
+                    <AuthFormsModal showLogin={true}/>
+                    <AuthFormsModal showLogin={false}/>
+                </>
+            }
+            
             <div>
                 <Button onClick={() => navigate('/pending-spots')}>{notify ?<NotificationsActiveIcon /> : <NotificationsIcon />}</Button>
             </div>
