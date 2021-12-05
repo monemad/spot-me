@@ -72,6 +72,46 @@ Users can search for other users to add as friends. The filtering is done thru a
 
 ---
 <br></br>
+
+Example API Request
+```js
+fetch(`/api/payments/`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'XSRF-Token': 'TOKEN_HERE'
+    },
+    body: JSON.stringify({
+        senderId: 5,
+        recipientId: 2,
+        amount: 56.78,
+        memo: "test memo",
+        fulfilled: true
+    })
+});
+```
+
+Example Response
+```json
+{
+    id: 5,
+    senderId: 2, 
+    recipientId: 5, 
+    amount: 56.78,
+    memo: "test memo",
+    fulfilled: true,
+    createdAt: "2021-12-05T18:50:39.682Z"
+    updatedAt: "2021-12-05T18:50:39.682Z"
+    firstName: "John"
+    lastName: "Doe"
+    username: "jdoe"
+    imgUrl: "images/default-profile-pic.png"
+    otherId: 5
+}
+```
+
+---
+<br></br>
 ## Architectural requirements
 - [x] Use a modern JS Library/Framework (React.js)
 - [x] Application must be interactible by users in a minimum of 3 ways
