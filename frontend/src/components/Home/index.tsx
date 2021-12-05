@@ -19,11 +19,9 @@ function Home() {
                     <h2>{sessionUser.username}</h2>
                     <p>Balance <span>${sessionUser.balance}</span></p>
                 </div>
-                <div className='transfer-div'>
-                    <CustomModal buttonText='Transfer Funds' Element={TransferForm} />
-                </div>
 
                 <div className='button-div'>
+                    <CustomModal buttonText='Transfer Funds' Element={TransferForm} />
                     <Button onClick={() => navigate('/friends')}>Friends</Button>
                     <CustomModal buttonText='Send/Request a Spot' Element={SpotForm} />
                     <Button onClick={() => navigate('/history')}>History</Button>
